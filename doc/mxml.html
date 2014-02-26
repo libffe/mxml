@@ -767,7 +767,7 @@ mxmlDelete</TT></A> function to recursively free the memory that is used
  XML node tree:</P>
 <PRE>
     mxml_node_t *node;
-    
+
     node = mxmlWalkPrev(current, tree,
                         MXML_DESCEND);
 
@@ -778,7 +778,7 @@ mxmlDelete</TT></A> function to recursively free the memory that is used
 <TT>mxmlFindElement</TT></A> function:</P>
 <PRE>
     mxml_node_t *node;
-    
+
     node = mxmlFindElement(tree, tree, &quot;name&quot;,
                            &quot;attr&quot;, &quot;value&quot;,
                            MXML_DESCEND);
@@ -1322,7 +1322,7 @@ mxmlSAXLoadString</TT></A> functions provide the SAX loading APIs. Each
 <P>The callback function receives the node, an event code, and a user
  data pointer you supply:</P>
 <PRE>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
@@ -1348,13 +1348,14 @@ mxmlSAXLoadString</TT></A> functions provide the SAX loading APIs. Each
 mxmlRetain</TT></A> function. For example, the following SAX callback
  will retain all nodes, effectively simulating a normal in-memory load:</P>
 <PRE>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
     {
       if (event != MXML_SAX_ELEMENT_CLOSE)
         mxmlRetain(node);
+      return 0;
     }
 </PRE>
 <P>More typically the SAX callback will only retain a small portion of
@@ -1366,7 +1367,7 @@ mxmlRetain</TT></A> function. For example, the following SAX callback
 
 <!-- NEED 10 -->
 <PRE>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
@@ -1405,6 +1406,7 @@ mxmlRetain</TT></A> function. For example, the following SAX callback
           mxmlRetain(node);
         }
       }
+      return 0;
     }
 </PRE>
 <P>The resulting skeleton document tree can then be searched just like
@@ -3988,7 +3990,7 @@ mxml_node_t</A> *);</P>
 mxml_node_t</A> *, int);</P>
 <H3 class="typedef"><A name="mxml_sax_cb_t">mxml_sax_cb_t</A></H3>
 <P class="description">SAX callback function</P>
-<P class="code"> typedef void (*mxml_sax_cb_t)(<A href="#mxml_node_t">
+<P class="code"> typedef int (*mxml_sax_cb_t)(<A href="#mxml_node_t">
 mxml_node_t</A> *, mxml_sax_event_t, void *);</P>
 <H3 class="typedef"><A name="mxml_sax_event_t">mxml_sax_event_t</A></H3>
 <P class="description">SAX event type.</P>

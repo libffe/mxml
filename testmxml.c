@@ -38,7 +38,7 @@ int event_counts[6];
  * Local functions...
  */
 
-void sax_cb(mxml_node_t *node, mxml_sax_event_t event, void *data);
+int sax_cb(mxml_node_t *node, mxml_sax_event_t event, void *data);
 mxml_type_t type_cb(mxml_node_t *node);
 const char *whitespace_cb(mxml_node_t *node, int where);
 
@@ -605,7 +605,7 @@ int                    /* O - Exit status */
  * 'sax_cb()' - Process nodes via SAX.
  */
 
-void sax_cb(mxml_node_t *node,      /* I - Current node */
+int sax_cb(mxml_node_t *node,       /* I - Current node */
             mxml_sax_event_t event, /* I - SAX event */
             void *data)             /* I - SAX user data */
 {
@@ -614,6 +614,7 @@ void sax_cb(mxml_node_t *node,      /* I - Current node */
    */
 
   event_counts[event]++;
+  return 0;
 }
 
 /*

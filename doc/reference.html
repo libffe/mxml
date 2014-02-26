@@ -442,7 +442,8 @@ void mxmlEntityRemoveCallback (<br>
 <dt>value</dt>
 <dd class="description">Attribute value, or NULL for any</dd>
 <dt>descend</dt>
-<dd class="description">Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST</dd>
+<dd class="description">Descend into tree - MXML_DESCEND, MXML_NO_DESCEND,
+or MXML_DESCEND_FIRST</dd>
 </dl>
 <h4 class="returnvalue">Return Value</h4>
 <p class="description">Element node or NULL</p>
@@ -702,7 +703,8 @@ const char *mxmlGetText (<br>
 <dt>node</dt>
 <dd class="description">Node to get</dd>
 <dt>whitespace</dt>
-<dd class="description">1 if string is preceded by whitespace, 0 otherwise</dd>
+<dd class="description">1 if string is preceded by whitespace, 0
+otherwise</dd>
 </dl>
 <h4 class="returnvalue">Return Value</h4>
 <p class="description">Text string or NULL</p>
@@ -1222,7 +1224,9 @@ child nodes of the specified type.<br>
 <br>
 The SAX callback must call mxmlRetain() for any nodes that need to
 be kept for later use. Otherwise, nodes are deleted when the parent
-node is closed or after each data, comment, CDATA, or directive node.
+node is closed or after each data, comment, CDATA, or directive node.<br>
+<br>
+If the SAX callback has a non zero return the processing is stopped.
 
 </p>
 <h3 class="function"><span class="info">&nbsp;Mini-XML 2.3&nbsp;</span><a name="mxmlSAXLoadFile">mxmlSAXLoadFile</a></h3>
@@ -1265,7 +1269,9 @@ child nodes of the specified type.<br>
 <br>
 The SAX callback must call mxmlRetain() for any nodes that need to
 be kept for later use. Otherwise, nodes are deleted when the parent
-node is closed or after each data, comment, CDATA, or directive node.
+node is closed or after each data, comment, CDATA, or directive node.<br>
+<br>
+If the SAX callback has a non zero return the processing is stopped.
 
 </p>
 <h3 class="function"><span class="info">&nbsp;Mini-XML 2.3&nbsp;</span><a name="mxmlSAXLoadString">mxmlSAXLoadString</a></h3>
@@ -1308,7 +1314,9 @@ child nodes of the specified type.<br>
 <br>
 The SAX callback must call mxmlRetain() for any nodes that need to
 be kept for later use. Otherwise, nodes are deleted when the parent
-node is closed or after each data, comment, CDATA, or directive node.
+node is closed or after each data, comment, CDATA, or directive node.<br>
+<br>
+If the SAX callback has a non zero return the processing is stopped.
 
 </p>
 <h3 class="function"><a name="mxmlSaveAllocString">mxmlSaveAllocString</a></h3>
@@ -1438,7 +1446,8 @@ int mxmlSetCDATA (<br>
 <h4 class="returnvalue">Return Value</h4>
 <p class="description">0 on success, -1 on failure</p>
 <h4 class="discussion">Discussion</h4>
-<p class="discussion">The node is not changed if it (or its first child) is not a CDATA element node.
+<p class="discussion">The node is not changed if it (or its first child) is not a CDATA element
+node.
 
 </p>
 <h3 class="function"><span class="info">&nbsp;Mini-XML 2.1&nbsp;</span><a name="mxmlSetCustom">mxmlSetCustom</a></h3>
@@ -1658,7 +1667,8 @@ void mxmlSetWrapMargin (<br>
 <dt>top</dt>
 <dd class="description">Top node</dd>
 <dt>descend</dt>
-<dd class="description">Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST</dd>
+<dd class="description">Descend into tree - MXML_DESCEND,
+MXML_NO_DESCEND, or MXML_DESCEND_FIRST</dd>
 </dl>
 <h4 class="returnvalue">Return Value</h4>
 <p class="description">Next node or NULL</p>
@@ -1681,7 +1691,8 @@ the node's children.</p>
 <dt>top</dt>
 <dd class="description">Top node</dd>
 <dt>descend</dt>
-<dd class="description">Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST</dd>
+<dd class="description">Descend into tree - MXML_DESCEND,
+MXML_NO_DESCEND, or MXML_DESCEND_FIRST</dd>
 </dl>
 <h4 class="returnvalue">Return Value</h4>
 <p class="description">Previous node or NULL</p>
@@ -1738,7 +1749,7 @@ typedef const char *(*mxml_save_cb_t)(<a href="#mxml_node_t">mxml_node_t</a> *, 
 <h3 class="typedef"><a name="mxml_sax_cb_t">mxml_sax_cb_t</a></h3>
 <p class="description">SAX callback function</p>
 <p class="code">
-typedef void (*mxml_sax_cb_t)(<a href="#mxml_node_t">mxml_node_t</a> *, mxml_sax_event_t, void *);
+typedef int (*mxml_sax_cb_t)(<a href="#mxml_node_t">mxml_node_t</a> *, mxml_sax_event_t, void *);
 </p>
 <h3 class="typedef"><a name="mxml_sax_event_t">mxml_sax_event_t</a></h3>
 <p class="description">SAX event type.</p>

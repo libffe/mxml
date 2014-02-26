@@ -503,7 +503,7 @@ process each node as it is read.</p>
 a user data pointer you supply:</p>
 
 <pre>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
@@ -538,13 +538,14 @@ the following SAX callback will retain all nodes, effectively
 simulating a normal in-memory load:</p>
 
 <pre>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
     {
       if (event != MXML_SAX_ELEMENT_CLOSE)
         mxmlRetain(node);
+      return 0;
     }
 </pre>
 
@@ -556,7 +557,7 @@ directives like  <tt>&lt;?xml ... ?&gt;</tt> and  <tt>&lt;!DOCTYPE ... &gt;</tt>
 
 <!-- NEED 10 -->
 <pre>
-    void
+    int
     sax_cb(mxml_node_t *node,
            mxml_sax_event_t event,
            void *data)
@@ -595,6 +596,7 @@ directives like  <tt>&lt;?xml ... ?&gt;</tt> and  <tt>&lt;!DOCTYPE ... &gt;</tt>
           mxmlRetain(node);
         }
       }
+      return 0;
     }
 </pre>
 

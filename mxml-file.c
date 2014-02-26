@@ -393,6 +393,8 @@ int /* O - Size of string */
  * be kept for later use. Otherwise, nodes are deleted when the parent
  * node is closed or after each data, comment, CDATA, or directive node.
  *
+ * If the SAX callback has a non zero return the processing is stopped.
+ *
  * @since Mini-XML 2.3@
  */
 
@@ -440,6 +442,8 @@ mxml_node_t * /* O - First node or NULL if the file could not be read. */
  * be kept for later use. Otherwise, nodes are deleted when the parent
  * node is closed or after each data, comment, CDATA, or directive node.
  *
+ * If the SAX callback has a non zero return the processing is stopped.
+ *
  * @since Mini-XML 2.3@
  */
 
@@ -476,6 +480,8 @@ mxml_node_t * /* O - First node or NULL if the file could not be read. */
  * The SAX callback must call mxmlRetain() for any nodes that need to
  * be kept for later use. Otherwise, nodes are deleted when the parent
  * node is closed or after each data, comment, CDATA, or directive node.
+ *
+ * If the SAX callback has a non zero return the processing is stopped.
  *
  * @since Mini-XML 2.3@
  */
@@ -1242,6 +1248,7 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
   int bufsize;       /* Size of buffer */
   mxml_type_t type;  /* Current node type */
   int encoding;      /* Character encoding */
+  int cb_err;        /* Value returned from the sax_cb */
   _mxml_global_t *global = _mxml_global();
   /* Global data */
   static const char *const types[] = /* Type strings... */
@@ -1350,9 +1357,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
       }
 
       if (sax_cb) {
-        (*sax_cb)(node, MXML_SAX_DATA, sax_data);
+        cb_err = (*sax_cb)(node, MXML_SAX_DATA, sax_data);
 
         if (!mxmlRelease(node)) node = NULL;
+        if (cb_err) goto error;
       }
 
       if (!first && node) first = node;
@@ -1369,9 +1377,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         node = mxmlNewText(parent, whitespace, "");
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_DATA, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_DATA, sax_data);
 
           if (!mxmlRelease(node)) node = NULL;
+        if (cb_err) goto error;
         }
 
         if (!first && node) first = node;
@@ -1460,9 +1469,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         }
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_COMMENT, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_COMMENT, sax_data);
 
           if (!mxmlRelease(node)) node = NULL;
+          if (cb_err) goto error;
         }
 
         if (node && !first) first = node;
@@ -1518,9 +1528,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         }
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_CDATA, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_CDATA, sax_data);
 
           if (!mxmlRelease(node)) node = NULL;
+          if (cb_err) goto error;
         }
 
         if (node && !first) first = node;
@@ -1577,9 +1588,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         }
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_DIRECTIVE, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_DIRECTIVE, sax_data);
 
           if (!mxmlRelease(node)) node = NULL;
+          if (cb_err) goto error;
         }
 
         if (node) {
@@ -1648,9 +1660,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         }
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_DIRECTIVE, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_DIRECTIVE, sax_data);
 
           if (!mxmlRelease(node)) node = NULL;
+          if (cb_err) goto error;
         }
 
         if (node) {
@@ -1687,9 +1700,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         parent = parent->parent;
 
         if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
+          cb_err =(*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
 
           if (!mxmlRelease(node) && first == node) first = NULL;
+          if (cb_err) goto error;
         }
 
         /*
@@ -1736,7 +1750,9 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
           ch = '/';
         }
 
-        if (sax_cb) (*sax_cb)(node, MXML_SAX_ELEMENT_OPEN, sax_data);
+        if (sax_cb) {
+          if ((*sax_cb)(node, MXML_SAX_ELEMENT_OPEN, sax_data)) goto error;
+        }
 
         if (!first) first = node;
 
@@ -1751,9 +1767,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
 
           if (cb && parent) type = (*cb)(parent);
         } else if (sax_cb) {
-          (*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
+          cb_err = (*sax_cb)(node, MXML_SAX_ELEMENT_CLOSE, sax_data);
 
           if (!mxmlRelease(node) && first == node) first = NULL;
+          if (cb_err) goto error;
         }
       }
 
