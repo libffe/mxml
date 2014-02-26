@@ -21,29 +21,25 @@
 #include "config.h"
 #include "mxml.h"
 
-
 /*
  * Global, per-thread data...
  */
 
-typedef struct _mxml_global_s
-{
-  void	(*error_cb)(const char *);
-  int	num_entity_cbs;
-  int	(*entity_cbs[100])(const char *name);
-  int	wrap;
-  mxml_custom_load_cb_t	custom_load_cb;
-  mxml_custom_save_cb_t	custom_save_cb;
+typedef struct _mxml_global_s {
+  void (*error_cb)(const char *);
+  int num_entity_cbs;
+  int (*entity_cbs[100])(const char *name);
+  int wrap;
+  mxml_custom_load_cb_t custom_load_cb;
+  mxml_custom_save_cb_t custom_save_cb;
 } _mxml_global_t;
-
 
 /*
  * Functions...
  */
 
-extern _mxml_global_t	*_mxml_global(void);
-extern int		_mxml_entity_cb(const char *name);
-
+extern _mxml_global_t *_mxml_global(void);
+extern int _mxml_entity_cb(const char *name);
 
 /*
  * End of "$Id: mxml-private.h 451 2014-01-04 21:50:06Z msweet $".

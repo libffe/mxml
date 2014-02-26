@@ -28,7 +28,6 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
 
-
 /*
  * Include necessary headers...
  */
@@ -40,7 +39,6 @@
 #include <ctype.h>
 #include <io.h>
 
-
 /*
  * Microsoft also renames the POSIX functions to _name, and introduces
  * a broken compatibility layer using the original names.  As a result,
@@ -51,14 +49,13 @@
  * names to the corresponding non-standard Microsoft names.
  */
 
-#define close		_close
-#define open		_open
-#define read	        _read
-#define snprintf 	_snprintf
-#define strdup		_strdup
-#define vsnprintf 	_vsnprintf
-#define write		_write
-
+#define close _close
+#define open _open
+#define read _read
+#define snprintf _snprintf
+#define strdup _strdup
+#define vsnprintf _vsnprintf
+#define write _write
 
 /*
  * Version number...
@@ -66,20 +63,17 @@
 
 #define MXML_VERSION "Mini-XML v2.8"
 
-
 /*
  * Inline function support...
  */
 
 #define inline _inline
 
-
 /*
  * Long long support...
  */
 
 #define HAVE_LONG_LONG 1
-
 
 /*
  * Do we have the snprintf() and vsnprintf() functions?
@@ -88,35 +82,33 @@
 #define HAVE_SNPRINTF 1
 #define HAVE_VSNPRINTF 1
 
-
 /*
  * Do we have the strXXX() functions?
  */
 
 #define HAVE_STRDUP 1
 
-
 /*
  * Define prototypes for string functions as needed...
  */
 
-#  ifndef HAVE_STRDUP
-extern char	*_mxml_strdup(const char *);
-#    define strdup _mxml_strdup
-#  endif /* !HAVE_STRDUP */
+#ifndef HAVE_STRDUP
+extern char *_mxml_strdup(const char *);
+#define strdup _mxml_strdup
+#endif /* !HAVE_STRDUP */
 
-extern char	*_mxml_strdupf(const char *, ...);
-extern char	*_mxml_vstrdupf(const char *, va_list);
+extern char *_mxml_strdupf(const char *, ...);
+extern char *_mxml_vstrdupf(const char *, va_list);
 
-#  ifndef HAVE_SNPRINTF
-extern int	_mxml_snprintf(char *, size_t, const char *, ...);
-#    define snprintf _mxml_snprintf
-#  endif /* !HAVE_SNPRINTF */
+#ifndef HAVE_SNPRINTF
+extern int _mxml_snprintf(char *, size_t, const char *, ...);
+#define snprintf _mxml_snprintf
+#endif /* !HAVE_SNPRINTF */
 
-#  ifndef HAVE_VSNPRINTF
-extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
-#    define vsnprintf _mxml_vsnprintf
-#  endif /* !HAVE_VSNPRINTF */
+#ifndef HAVE_VSNPRINTF
+extern int _mxml_vsnprintf(char *, size_t, const char *, va_list);
+#define vsnprintf _mxml_vsnprintf
+#endif /* !HAVE_VSNPRINTF */
 
 /*
  * End of "$Id: config.h 451 2014-01-04 21:50:06Z msweet $".

@@ -22,7 +22,6 @@
 #include "config.h"
 #include "mxml.h"
 
-
 /*
  * 'mxmlFindElement()' - Find the named element.
  *
@@ -36,69 +35,64 @@
  * constrains the search to a particular node's children.
  */
 
-mxml_node_t *				/* O - Element node or NULL */
-mxmlFindElement(mxml_node_t *node,	/* I - Current node */
-                mxml_node_t *top,	/* I - Top node */
-                const char  *name,	/* I - Element name or NULL for any */
-		const char  *attr,	/* I - Attribute name, or NULL for none */
-		const char  *value,	/* I - Attribute value, or NULL for any */
-		int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+mxml_node_t * /* O - Element node or NULL */
+    mxmlFindElement(
+        mxml_node_t *node, /* I - Current node */
+        mxml_node_t *top,  /* I - Top node */
+        const char *name,  /* I - Element name or NULL for any */
+        const char *attr,  /* I - Attribute name, or NULL for none */
+        const char *value, /* I - Attribute value, or NULL for any */
+        int descend) /* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND,
+                        or MXML_DESCEND_FIRST */
 {
-  const char	*temp;			/* Current attribute value */
+  const char *temp; /* Current attribute value */
 
+  /*
+   * Range check input...
+   */
 
- /*
-  * Range check input...
-  */
+  if (!node || !top || (!attr && value)) return (NULL);
 
-  if (!node || !top || (!attr && value))
-    return (NULL);
-
- /*
-  * Start with the next node...
-  */
+  /*
+   * Start with the next node...
+   */
 
   node = mxmlWalkNext(node, top, descend);
 
- /*
-  * Loop until we find a matching element...
-  */
+  /*
+   * Loop until we find a matching element...
+   */
 
-  while (node != NULL)
-  {
-   /*
-    * See if this node matches...
-    */
+  while (node != NULL) {
+    /*
+     * See if this node matches...
+     */
 
-    if (node->type == MXML_ELEMENT &&
-        node->value.element.name &&
-	(!name || !strcmp(node->value.element.name, name)))
-    {
-     /*
-      * See if we need to check for an attribute...
-      */
+    if (node->type == MXML_ELEMENT && node->value.element.name &&
+        (!name || !strcmp(node->value.element.name, name))) {
+      /*
+       * See if we need to check for an attribute...
+       */
 
-      if (!attr)
-        return (node);			/* No attribute search, return it... */
+      if (!attr) return (node); /* No attribute search, return it... */
 
-     /*
-      * Check for the attribute...
-      */
+      /*
+       * Check for the attribute...
+       */
 
-      if ((temp = mxmlElementGetAttr(node, attr)) != NULL)
-      {
-       /*
-        * OK, we have the attribute, does it match?
-	*/
+      if ((temp = mxmlElementGetAttr(node, attr)) != NULL) {
+        /*
+         * OK, we have the attribute, does it match?
+         */
 
-	if (!value || !strcmp(value, temp))
-	  return (node);		/* Yes, return it... */
+        if (!value || !strcmp(value, temp))
+          return (node); /* Yes, return it... */
       }
     }
 
-   /*
-    * No match, move on to the next node...
-    */
+    /*
+     * No match, move on to the next node...
+     */
 
     if (descend == MXML_DESCEND)
       node = mxmlWalkNext(node, top, MXML_DESCEND);
@@ -108,7 +102,6 @@ mxmlFindElement(mxml_node_t *node,	/* I - Current node */
 
   return (NULL);
 }
-
 
 /*
  * 'mxmlFindPath()' - Find a node with the given path.
@@ -123,51 +116,44 @@ mxmlFindElement(mxml_node_t *node,	/* I - Current node */
  * @since Mini-XML 2.7@
  */
 
-mxml_node_t *				/* O - Found node or NULL */
-mxmlFindPath(mxml_node_t *top,		/* I - Top node */
-	     const char  *path)		/* I - Path to element */
+mxml_node_t *                      /* O - Found node or NULL */
+    mxmlFindPath(mxml_node_t *top, /* I - Top node */
+                 const char *path) /* I - Path to element */
 {
-  mxml_node_t	*node;			/* Current node */
-  char		element[256];		/* Current element name */
-  const char	*pathsep;		/* Separator in path */
-  int		descend;		/* mxmlFindElement option */
+  mxml_node_t *node;   /* Current node */
+  char element[256];   /* Current element name */
+  const char *pathsep; /* Separator in path */
+  int descend;         /* mxmlFindElement option */
 
+  /*
+   * Range check input...
+   */
 
- /*
-  * Range check input...
-  */
+  if (!top || !path || !*path) return (NULL);
 
-  if (!top || !path || !*path)
-    return (NULL);
-
- /*
-  * Search each element in the path...
-  */
+  /*
+   * Search each element in the path...
+   */
 
   node = top;
-  while (*path)
-  {
-   /*
-    * Handle wildcards...
-    */
+  while (*path) {
+    /*
+     * Handle wildcards...
+     */
 
-    if (!strncmp(path, "*/", 2))
-    {
+    if (!strncmp(path, "*/", 2)) {
       path += 2;
       descend = MXML_DESCEND;
-    }
-    else
+    } else
       descend = MXML_DESCEND_FIRST;
 
-   /*
-    * Get the next element in the path...
-    */
+    /*
+     * Get the next element in the path...
+     */
 
-    if ((pathsep = strchr(path, '/')) == NULL)
-      pathsep = path + strlen(path);
+    if ((pathsep = strchr(path, '/')) == NULL) pathsep = path + strlen(path);
 
-    if (pathsep == path || (pathsep - path) >= sizeof(element))
-      return (NULL);
+    if (pathsep == path || (pathsep - path) >= sizeof(element)) return (NULL);
 
     memcpy(element, path, pathsep - path);
     element[pathsep - path] = '\0';
@@ -177,25 +163,24 @@ mxmlFindPath(mxml_node_t *top,		/* I - Top node */
     else
       path = pathsep;
 
-   /*
-    * Search for the element...
-    */
+    /*
+     * Search for the element...
+     */
 
-    if ((node = mxmlFindElement(node, node, element, NULL, NULL,
-                                descend)) == NULL)
+    if ((node = mxmlFindElement(node, node, element, NULL, NULL, descend)) ==
+        NULL)
       return (NULL);
   }
 
- /*
-  * If we get this far, return the node or its first child...
-  */
+  /*
+   * If we get this far, return the node or its first child...
+   */
 
   if (node->child && node->child->type != MXML_ELEMENT)
     return (node->child);
   else
     return (node);
 }
-
 
 /*
  * 'mxmlWalkNext()' - Walk to the next logical node in the tree.
@@ -205,10 +190,11 @@ mxmlFindPath(mxml_node_t *top,		/* I - Top node */
  * the node's children.
  */
 
-mxml_node_t *				/* O - Next node or NULL */
-mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
-             mxml_node_t *top,		/* I - Top node */
-             int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+mxml_node_t *                       /* O - Next node or NULL */
+    mxmlWalkNext(mxml_node_t *node, /* I - Current node */
+                 mxml_node_t *top,  /* I - Top node */
+                 int descend)       /* I - Descend into tree - MXML_DESCEND,
+                                 MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
 {
   if (!node)
     return (NULL);
@@ -218,8 +204,7 @@ mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
     return (NULL);
   else if (node->next)
     return (node->next);
-  else if (node->parent && node->parent != top)
-  {
+  else if (node->parent && node->parent != top) {
     node = node->parent;
 
     while (!node->next)
@@ -229,11 +214,9 @@ mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
         node = node->parent;
 
     return (node->next);
-  }
-  else
+  } else
     return (NULL);
 }
-
 
 /*
  * 'mxmlWalkPrev()' - Walk to the previous logical node in the tree.
@@ -243,37 +226,32 @@ mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
  * the walk to the node's children.
  */
 
-mxml_node_t *				/* O - Previous node or NULL */
-mxmlWalkPrev(mxml_node_t *node,		/* I - Current node */
-             mxml_node_t *top,		/* I - Top node */
-             int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+mxml_node_t *                       /* O - Previous node or NULL */
+    mxmlWalkPrev(mxml_node_t *node, /* I - Current node */
+                 mxml_node_t *top,  /* I - Top node */
+                 int descend)       /* I - Descend into tree - MXML_DESCEND,
+                                 MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
 {
   if (!node || node == top)
     return (NULL);
-  else if (node->prev)
-  {
-    if (node->prev->last_child && descend)
-    {
-     /*
-      * Find the last child under the previous node...
-      */
+  else if (node->prev) {
+    if (node->prev->last_child && descend) {
+      /*
+       * Find the last child under the previous node...
+       */
 
       node = node->prev->last_child;
 
-      while (node->last_child)
-        node = node->last_child;
+      while (node->last_child) node = node->last_child;
 
       return (node);
-    }
-    else
+    } else
       return (node->prev);
-  }
-  else if (node->parent != top)
+  } else if (node->parent != top)
     return (node->parent);
   else
     return (NULL);
 }
-
 
 /*
  * End of "$Id: mxml-search.c 451 2014-01-04 21:50:06Z msweet $".
