@@ -1751,7 +1751,10 @@ static mxml_node_t * /* O - First node or NULL if the file could not be read. */
         }
 
         if (sax_cb) {
-          if ((*sax_cb)(node, MXML_SAX_ELEMENT_OPEN, sax_data)) goto error;
+          if ((*sax_cb)(node, MXML_SAX_ELEMENT_OPEN, sax_data)) {
+            mxmlRelease(node);
+            goto error;
+          }
         }
 
         if (!first) first = node;
